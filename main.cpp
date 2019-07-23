@@ -7,18 +7,6 @@ int main(int argc, char* argv[])
 {
 	string infixExpression;
 	string postfixExpression;
-
-	/*string temp = "atan";
-
-	auto Aauto = temp.find("tan");
-
-	if (Aauto == string::npos)
-	{
-		cout << "tan ¹ÌÈ®ÀÎ " << endl;
-	}
-	else {
-		cout << Aauto << endl;
-	}*/
 	
 	double result = 0.0;
 

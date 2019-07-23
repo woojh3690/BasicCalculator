@@ -23,7 +23,10 @@ public:
 	double Calculate(const string postfixExpression);
 
 private:
-	void order_stack(string::iterator i, string &postfixExpression, vector<char> &stack);
+	void compare(string::iterator i, string &postfixExpression, vector<char> &stack);
+	void preprocessing(string &infixExpression);
+	string ReplaceAll(std::string str, const std::string& from, const std::string& to);
+	double getRadian(int _num);
 };
 
 #endif
