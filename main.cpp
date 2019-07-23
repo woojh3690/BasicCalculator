@@ -3,12 +3,12 @@
 #include "Calculator.h"
 using namespace std;
 
-int main(void)
+int main(int argc, char* argv[])
 {
 	string infixExpression;
 	string postfixExpression;
 
-	string temp = "atan";
+	/*string temp = "atan";
 
 	auto Aauto = temp.find("tan");
 
@@ -18,19 +18,20 @@ int main(void)
 	}
 	else {
 		cout << Aauto << endl;
-	}
-	/*
+	}*/
+	
 	double result = 0.0;
 
 	cout << "Enter Infix Expression : ";
  	cin >> infixExpression;
  
- 	postfixExpression = GetPostFix(infixExpression);
+	Calculator* cal = new Calculator();
+ 	postfixExpression = cal->GetPostFix(infixExpression);
 	cout << "Postfix Expression : " << postfixExpression << "\n";
 	
-	result = Calculate(postfixExpression);
+	result = cal->Calculate(postfixExpression);
  	cout << "Result : " << result << "\n";
 
-	*/
+	
 	return 0;
 }
