@@ -19,13 +19,13 @@ public:
 	~Calculator();
 
 public:
-	string GetPostFix(const string infixExpression);
-	double Calculate(const string postfixExpression);
+	string GetPostFix(const string infixExpression); // 중위 표기법을 후위 표기법으로 변환
+	double Calculate(const string postfixExpression); // 후위 표기법 계산
+	string ReplaceAll(std::string str, const std::string& from, const std::string& to);
 
 private:
 	void compare(string::iterator i, string &postfixExpression, vector<char> &stack);
 	void preprocessing(string &infixExpression);
-	string ReplaceAll(std::string str, const std::string& from, const std::string& to);
 	double getRadian(int _num);
 };
 

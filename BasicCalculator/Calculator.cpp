@@ -26,6 +26,10 @@ Calculator::Calculator()
 	}
 }
 
+Calculator::~Calculator()
+{
+}
+
 // 중위 표기법을 후위 표기법으로 변환
 string Calculator::GetPostFix(string infixExpression)
 {
@@ -79,6 +83,7 @@ string Calculator::GetPostFix(string infixExpression)
 		postfixExpression += " ";
 	}
 
+	// 남은 연산자 처리
 	size_t stackSize = stack.size();
 	for (size_t i = 0; i < stackSize; ++i)
 	{
@@ -90,7 +95,7 @@ string Calculator::GetPostFix(string infixExpression)
 	return postfixExpression;
 }
 
-//후위 표기법 계산
+// 후위 표기법 계산
 double Calculator::Calculate(const string postfixExpression)
 {
 	vector<double> stack;
@@ -103,7 +108,7 @@ double Calculator::Calculate(const string postfixExpression)
 		if (simbols.find(str) == string::npos)
 		{
 			if (simbols_single.find(str) != string::npos)
-			{// 다항 연산자
+			{// 다항 연산자 계산
 				double d1;
 				d1 = stack.back();
 				stack.pop_back();
@@ -117,14 +122,14 @@ double Calculator::Calculate(const string postfixExpression)
 
 			}
 			else
-			{ // 이항, 다항 연산자도 아닐경우
+			{ // 이항, 다항 연산자도 아닌 상수인 경우 stack에 push
 				double dtemp;
 				stringstream(str) >> dtemp;
 				stack.push_back(dtemp);
 			}
 		}
 		else
-		{// 이항 연산자
+		{// 이항 연산자 계산
 			double d1, d2;
 			d2 = stack.back();
 			stack.pop_back();
