@@ -6,24 +6,46 @@ Calculator::~Calculator()
 
 double Calculator::start(string params[][2])
 {
+	/*string temp;
+	double start = clock();
+	for (int i = 0; i < 1000; i++)
+	Mapping(params);
+	double taketime = clock() - start;
+	printf("Mapping 걸린시간 %lf\n", taketime);
+
+	temp  = "x1*a1+x2*a2+x3*a3+x4*a4";
+
+	 start = clock();
+	for (int i = 0; i < 1000; i++)
+	GetPostFix(temp);
+	 taketime = clock() - start;
+	printf("GetPostFix 걸린시간 %lf\n", taketime);
+
+	temp = "x1  a1 *  x2  a2 * +  x3  a3 * +  x4  a4 * +";
+	 start = clock();
+	for (int i = 0; i < 1000; i++)
+		Calculate(temp);
+	 taketime = clock() - start;
+	printf("Calculate 걸린시간 %lf\n", taketime);
+
+	return 0.231;*/
+
 	string temp = Mapping(params);
 	temp = GetPostFix(temp);
 	return Calculate(temp);
+
 }
 
 // 중위 표기법을 후위 표기법으로 변환
 string Calculator::GetPostFix(string& infixExpression)
 {
-	/*double start = clock();
-	for (int i = 0; i < 1000; i++)
-	{*/
 	preprocessing(infixExpression); //전처리
-		string postfixExpression;
-		string::iterator i = infixExpression.begin();
-		vector<char> stack;
+	string postfixExpression;
+	vector<char> stack;
+	string::iterator i = infixExpression.begin();
+	string::iterator end = infixExpression.end();
 
-
-	for (; i != infixExpression.end(); ++i)
+	for (; i != end; ++i)
 	{
 		// 연산자 아닐경우 패스
 		if (simbols.find(*i) == string::npos || (*i == '-' && simbols.find(*i + 1) == string::npos))
@@ -48,10 +70,8 @@ string Calculator::GetPostFix(string& infixExpression)
 			break;
 		case '+':
 		case '-':
-			compare(i, postfixExpression, stack); break;
 		case '*':
 		case '/':
-			compare(i, postfixExpression, stack); break;
 		case '^':
 		case 'l':
 		case 's':
@@ -84,29 +104,31 @@ double Calculator::Calculate(string& postfixExpression)
 {
 	vector<double> stack;
 	string str = "dumy";
+	double d1, d2;
+	size_t find;
 
 	stringstream temp(postfixExpression);
 	while(!temp.eof())
 	{
 		temp >> str;
-		if (simbols.find(str) == string::npos)
+		find = simbols.find(str);
+		if (find == string::npos)
 		{
 			if (simbols_single.find(str) != string::npos)
-			{// 다항 연산자 계산
-				double d1;
+			{// 단항 연산자 계산
 				d1 = stack.back();
 				stack.pop_back();
 				switch (simbols_single[simbols_single.find(str)])
 				{
-				case 'l': stack.push_back(log10(d1)); break;
-				case 's': stack.push_back(sin(getRadian(d1))); break;
-				case 'c': stack.push_back(cos(getRadian(d1))); break;
-				case 't': stack.push_back(tan(getRadian(d1))); break;
+					case 'l': stack.push_back(log10(d1)); break;
+					case 's': stack.push_back(sin(getRadian(d1))); break;
+					case 'c': stack.push_back(cos(getRadian(d1))); break;
+					case 't': stack.push_back(tan(getRadian(d1))); break;
 				}
 
 			}
 			else
-			{ // 이항, 다항 연산자도 아닌 상수인 경우 stack에 push
+			{ // 이항, 단항 연산자도 아닌 상수인 경우 stack에 push
 				double dtemp;
 				stringstream(str) >> dtemp;
 				stack.push_back(dtemp);
@@ -114,12 +136,11 @@ double Calculator::Calculate(string& postfixExpression)
 		}
 		else
 		{// 이항 연산자 계산
-			double d1, d2;
 			d2 = stack.back();
 			stack.pop_back();
 			d1 = stack.back();
 			stack.pop_back();
-			switch (simbols[simbols.find(str)])
+			switch (simbols[find])
 			{
 			case '+':
 				stack.push_back(d1 + d2); break;
@@ -142,36 +163,33 @@ double Calculator::Calculate(string& postfixExpression)
 void Calculator::preprocessing(string& infixExpression)
 {
 	//커스텀 함수를 문자 하나로 변경
-	map<string, char>::iterator end = func_map.end();
-	for (map<string, char>::iterator it = func_map.begin(); it != end; ++it) {
-		string from = it->first;
-		string to = string(1, it->second);
-		ReplaceAll(infixExpression, from, to);
+	for (int i = 0; i < FUNC_SIZE; i++) {
+		ReplaceAll(infixExpression, func_map[i][0], func_map[i][1]);
 	}
 
 	//커스텀 함수 위치 변경
 	vector<pair<char, int>> stack;
 	int count = 0;
+	char cur_index;
 	for (int i = 0; i != infixExpression.length(); ++i)
 	{
-		if (infixExpression[i] == '(')
+		cur_index = infixExpression[i];
+		if (cur_index == '(')
 		{
 			count++;
 		}
-		else if (infixExpression[i] == ')')
+		else if (cur_index == ')')
 		{
 			count--;
 		}
 
-		if (simbols_single.find(infixExpression[i]) != string::npos)
+		if (simbols_single.find(cur_index) != string::npos)
 		{
-			char item = infixExpression.substr(i)[0];
 			infixExpression.erase(i, 1);
-			stack.push_back(pair<char, int>(item, count));
-
+			stack.push_back(pair<char, int>(cur_index, count));
 			count++;
 		}
-		else if (stack.size() != 0 && ')' == infixExpression[i] && stack.back().second == count)
+		else if (')' == cur_index && stack.size() != 0 && stack.back().second == count)
 		{
 			infixExpression.insert(i + 1, 1, stack.back().first);
 			stack.pop_back();
@@ -206,8 +224,7 @@ double Calculator::getRadian(int _num)
 
 string Calculator::Mapping(string params[][2])
 {
-	int end = sizeof(params) / sizeof(params[0]);
-	for (int i = 0; i < end; i++)
+	for (int i = 0; i < size; i++)
 	{
 		ReplaceAll(formula, params[i][0], params[i][1]);
 	}

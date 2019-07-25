@@ -1,26 +1,38 @@
 #ifndef CALCULATOR_H
 #define CALCULATOR_H
 
+#define _USE_MATH_DEFINES
+#define FUNC_SIZE 5
+#include <math.h>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
-#define _USE_MATH_DEFINES
-#include <math.h>
-#include <sstream>
+#include <time.h>
 
 using namespace std;
 
 class Calculator {
+
 private:
-	map<string, char> func_map; // 커스텀 함수 설정 변수
+	string func_map[FUNC_SIZE][2] = {
+		{"log", "l"},
+		{"log", "l"},
+		{"sin", "s"},
+		{"cos", "c"},
+		{"tan", "t"}
+	}; // 커스텀 함수 설정 변수// 커스텀 함수 설정 변수
+
 	map<char, int> priority_map; // 우선순위 설정 변수
 	string simbols = "(+-*/)^ "; // 다항연산자 기호 검사 변수
 	string simbols_single; // 단항연산자 기호 검사 변수
 	string formula;
+	int size;
 
 public:
-	Calculator(string formula) {
+	Calculator(string formula, int size) {
 		this->formula = formula;
+		this->size = size;
 
 		//기본 연산자 우선순위 초기화
 		priority_map.insert(pair<char, int>('+', 1));
@@ -29,17 +41,11 @@ public:
 		priority_map.insert(pair<char, int>('/', 2));
 		priority_map.insert(pair<char, int>('^', 3));
 
-		// 커스텀 함수 초기화
-		func_map.insert(pair<string, char>("log", 'l'));
-		func_map.insert(pair<string, char>("sin", 's'));
-		func_map.insert(pair<string, char>("cos", 'c'));
-		func_map.insert(pair<string, char>("tan", 't'));
-
 		// 커스텀 함수 우선순위 초기화 (제곱(^)이랑 같은 3으로 모두 초기화 됨)
-		for (map<string, char>::iterator it = func_map.begin(); it != func_map.end(); ++it) {
-			char func_value = func_map[it->first];
-			priority_map.insert(map<char, int>::value_type(func_value, 3)); // 우선순위 설정
-			simbols_single += func_value; // 단항연산자 추가
+		for (int i = 0; i < FUNC_SIZE; i++) {
+			char value = char(func_map[1]);
+			priority_map.insert(pair<char, int>(value, 3)); // 우선순위 설정
+			simbols_single += value; // 단항연산자 추가
 		}
 	};
 	~Calculator();

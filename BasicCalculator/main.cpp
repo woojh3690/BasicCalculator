@@ -1,11 +1,10 @@
 #include <iostream>
 #include <string>
 #include "Calculator.h"
-#include <time.h>
 using namespace std;
 
-void my();
-float adata[8] = { 55.330000, 2.98926, 1.720000, 0.000000, 54.000000, 0.000000, 1.662190, 0.000000 };
+double my();
+double adata[8] = { 55.330000, 2.98926, 1.720000, 0.000000, 54.000000, 0.000000, 1.662190, 0.000000 };
 
 int main(int argc, char* argv[])
 {
@@ -13,26 +12,25 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < 10000; i++)
 		my();
 	double taketime = clock() - start;
-	printf("걸린시간 %f\n", taketime);
+	printf("걸린시간 %lf\n", taketime);
 
 	printf("---중간 완료---\n");
 
+	double nativeResult;
 	start = clock();
 	for (int i = 0; i < 10000; i++)
-		float temp = adata[0] * adata[1] + adata[2] * adata[3] + adata[4] * adata[5] + adata[6] * adata[7];
+		nativeResult = adata[0] * adata[1] + adata[2] * adata[3] + adata[4] * adata[5] + adata[6] * adata[7];
 	taketime = clock() - start;
-	printf("걸린시간 %f\n", taketime);
+	printf("걸린시간 %lf\n", taketime);
 
-	
+	printf("my 결과 : %lf\n", my());
+	printf("my 결과 : %lf\n", nativeResult);
 	return 0;
 }
 
 string formula = "x1*a1+x2*a2+x3*a3+x4*a4";
-Calculator* cal = new Calculator(formula);
-
-void my()
-{
-	string params[][2] = {
+Calculator* cal = new Calculator(formula, 8);
+string params[][2] = {
 		{"x1", "55.330000"},
 		{"a1", "2.98926"},
 		{"x2", "1.720000"},
@@ -42,5 +40,7 @@ void my()
 		{"x4", "1.662190"},
 		{"a4", "0.000000 "} };
 
-	cal->start(params);
+double my()
+{
+	return cal->start(params);
 }
