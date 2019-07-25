@@ -4,6 +4,13 @@ Calculator::~Calculator()
 {
 }
 
+double Calculator::start(string params[][2])
+{
+	string temp = Mapping(params);
+	temp = GetPostFix(temp);
+	return Calculate(temp);
+}
+
 // 중위 표기법을 후위 표기법으로 변환
 string Calculator::GetPostFix(string& infixExpression)
 {
@@ -195,4 +202,14 @@ void Calculator::ReplaceAll(std::string& str, const std::string& from, const std
 double Calculator::getRadian(int _num)
 {
 	return _num * (M_PI / 180);
+}
+
+string Calculator::Mapping(string params[][2])
+{
+	int end = sizeof(params) / sizeof(params[0]);
+	for (int i = 0; i < end; i++)
+	{
+		ReplaceAll(formula, params[i][0], params[i][1]);
+	}
+	return formula;
 }
