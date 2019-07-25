@@ -1,6 +1,7 @@
 #include "Calculator.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <time.h>
 #include <sstream>
 
 Calculator::Calculator()
@@ -33,66 +34,86 @@ Calculator::~Calculator()
 // 중위 표기법을 후위 표기법으로 변환
 string Calculator::GetPostFix(string infixExpression)
 {
+	double start = clock();
+	for (int i = 0; i < 1000; i++)
+	{
 	preprocessing(infixExpression); //전처리
+	}
+	double taketime = clock() - start;
+	printf("전처리 걸린시간 %f\n", taketime);
 
-	string postfixExpression;
-	string::iterator i = infixExpression.begin();
-	vector<char> stack;
 
-	for (; i != infixExpression.end(); ++i)
+
+	start = clock();
+	for (int j = 0; j < 1000; j++)
 	{
-		// 연산자 아닐경우 패스
-		if (simbols.find(*i) == string::npos)
-		{
-			postfixExpression += *i;
-			continue;
-		}
+		string postfixExpression;
+		string::iterator i = infixExpression.begin();
+		vector<char> stack;
 
-		// 연산자 처리
-		postfixExpression += " ";
-		switch (*i)
+
+		for (; i != infixExpression.end(); ++i)
 		{
-		case '(': stack.push_back('('); break;
-		case ')': 
-			while (stack.back() != '(')
+			// 연산자 아닐경우 패스
+			if (simbols.find(*i) == string::npos || (*i == '-' && simbols.find(*i + 1) == string::npos))
 			{
-				postfixExpression += stack.back();
-				postfixExpression += " ";
-				stack.pop_back();
+				postfixExpression += *i;
+				continue;
 			}
-			stack.pop_back();
-			break;
-		case '+':
-		case '-':
-			compare(i, postfixExpression, stack); break;
-		case '*':
-		case '/':
-			compare(i, postfixExpression, stack); break;
-		case '^':
-		case 'l':
-		case 's':
-		case 'c':
-		case 't':
-			compare(i, postfixExpression, stack); break;
-		case ' ': 
-			break;
-		default:
-			//error//
-			break;
+
+			// 연산자 처리
+			postfixExpression += " ";
+			switch (*i)
+			{
+			case '(': stack.push_back('('); break;
+			case ')':
+				while (stack.back() != '(')
+				{
+					postfixExpression += stack.back();
+					postfixExpression += " ";
+					stack.pop_back();
+				}
+				stack.pop_back();
+				break;
+			case '+':
+			case '-':
+				compare(i, postfixExpression, stack); break;
+			case '*':
+			case '/':
+				compare(i, postfixExpression, stack); break;
+			case '^':
+			case 'l':
+			case 's':
+			case 'c':
+			case 't':
+				compare(i, postfixExpression, stack); break;
+			case ' ':
+				break;
+			default:
+				//error//
+				break;
+			}
+			postfixExpression += " ";
 		}
-		postfixExpression += " ";
-	}
 
-	// 남은 연산자 처리
-	size_t stackSize = stack.size();
-	for (size_t i = 0; i < stackSize; ++i)
-	{
-		postfixExpression += " ";
-		postfixExpression += stack.back();
-		stack.pop_back();
-	}
+		// 남은 연산자 처리
+		size_t stackSize = stack.size();
+		for (size_t i = 0; i < stackSize; ++i)
+		{
+			postfixExpression += " ";
+			postfixExpression += stack.back();
+			stack.pop_back();
+		}
 
-	return postfixExpression;
+
+
+	}
+	taketime = clock() - start;
+	printf("나머지 걸린시간 %f\n", taketime);
+	
+
+
+	return " ";
 }
 
 // 후위 표기법 계산
@@ -158,10 +179,11 @@ double Calculator::Calculate(const string postfixExpression)
 void Calculator::preprocessing(string& infixExpression)
 {
 	//커스텀 함수를 문자 하나로 변경
-	for (map<string, char>::iterator it = func_map.begin(); it != func_map.end(); ++it) {
+	map<string, char>::iterator end = func_map.end();
+	for (map<string, char>::iterator it = func_map.begin(); it != end; ++it) {
 		string from = it->first;
 		string to = string(1, it->second);
-		infixExpression = ReplaceAll(infixExpression, from, to);
+		ReplaceAll(infixExpression, from, to);
 	}
 
 	//커스텀 함수 위치 변경
@@ -206,13 +228,12 @@ void Calculator::compare(string::iterator i, string& postfixExpression, vector<c
 	stack.push_back(*i);
 }
 
-string Calculator::ReplaceAll(std::string str, const std::string& from, const std::string& to) {
+void Calculator::ReplaceAll(std::string& str, const std::string& from, const std::string& to) {
 	size_t start_pos = 0;
 	while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
 		str.replace(start_pos, from.length(), to);
 		start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
 	}
-	return str;
 }
 
 double Calculator::getRadian(int _num)
