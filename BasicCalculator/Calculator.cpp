@@ -34,19 +34,19 @@ Calculator::~Calculator()
 // 중위 표기법을 후위 표기법으로 변환
 string Calculator::GetPostFix(string infixExpression)
 {
-	double start = clock();
+	/*double start = clock();
 	for (int i = 0; i < 1000; i++)
-	{
+	{*/
 	preprocessing(infixExpression); //전처리
-	}
+	/*}
 	double taketime = clock() - start;
-	printf("전처리 걸린시간 %f\n", taketime);
+	printf("전처리 걸린시간 %f\n", taketime);*/
 
 
 
-	start = clock();
-	for (int j = 0; j < 1000; j++)
-	{
+	/*start = clock();
+	for (int j = 0; j < 1; j++)
+	{*/
 		string postfixExpression;
 		string::iterator i = infixExpression.begin();
 		vector<char> stack;
@@ -107,13 +107,13 @@ string Calculator::GetPostFix(string infixExpression)
 
 
 
-	}
+		/*}
 	taketime = clock() - start;
-	printf("나머지 걸린시간 %f\n", taketime);
+	printf("나머지 걸린시간 %f\n", taketime);*/
 	
 
 
-	return " ";
+	return postfixExpression;
 }
 
 // 후위 표기법 계산

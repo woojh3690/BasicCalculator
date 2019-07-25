@@ -1,5 +1,4 @@
 #include "Mapper.h"
-#include "Calculator.h"
 #include <time.h>
 
 Mapper::Mapper()
@@ -10,15 +9,12 @@ Mapper::~Mapper()
 {
 }
 
-string Mapper::Mapping(string formula,  map<string, string> params)
+string Mapper::Mapping(string formula, string params[][2])
 {
-	Calculator cal = Calculator();
-	map<string, string>::iterator end = params.end();
-	
-	for (map<string, string>::iterator it = params.begin(); it != end; it++)
+	int end = sizeof(params) / sizeof(params[0]);
+	for (int i = 0; i < end; i++)
 	{
-		cal.ReplaceAll(formula, it->first, it->second);
+		cal.ReplaceAll(formula, params[i][0], params[i][1]);
 	}
-
 	return formula;
 }
