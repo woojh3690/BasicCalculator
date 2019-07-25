@@ -28,6 +28,8 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
+Calculator* cal = new Calculator();
+
 void my()
 {
 	string formula = "x1*a1+x2*a2+x3*a3+x4*a4"; // 계산할 수식
@@ -60,7 +62,6 @@ void my()
 	//infixExpression = 
 
 	string postfixExpression;
-	Calculator* cal = new Calculator();
 
 	/*start = clock();
 	for (int i = 0; i < 1; i++)

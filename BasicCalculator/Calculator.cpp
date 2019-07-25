@@ -1,28 +1,5 @@
 #include "Calculator.h"
 
-Calculator::Calculator()
-{
-	//기본 연산자 우선순위 초기화
-	priority_map.insert(pair<char, int>('+', 1));
-	priority_map.insert(pair<char, int>('-', 1));
-	priority_map.insert(pair<char, int>('*', 2));
-	priority_map.insert(pair<char, int>('/', 2));                                                                               
-	priority_map.insert(pair<char, int>('^', 3));
-
-	// 커스텀 함수 초기화
-	func_map.insert(pair<string, char>("log", 'l'));
-	func_map.insert(pair<string, char>("sin", 's'));
-	func_map.insert(pair<string, char>("cos", 'c'));
-	func_map.insert(pair<string, char>("tan", 't'));
-
-	// 커스텀 함수 우선순위 초기화 (제곱(^)이랑 같은 3으로 모두 초기화 됨)
-	for (map<string, char>::iterator it = func_map.begin(); it != func_map.end(); ++it) {
-		char func_value = func_map[it->first];
-		priority_map.insert(map<char, int>::value_type(func_value, 3)); // 우선순위 설정
-		simbols_single += func_value; // 단항연산자 추가
-	}
-}
-
 Calculator::~Calculator()
 {
 }
@@ -34,80 +11,63 @@ string Calculator::GetPostFix(string& infixExpression)
 	for (int i = 0; i < 1000; i++)
 	{*/
 	preprocessing(infixExpression); //전처리
-	/*}
-	double taketime = clock() - start;
-	printf("전처리 걸린시간 %f\n", taketime);*/
-
-
-
-	/*start = clock();
-	for (int j = 0; j < 1; j++)
-	{*/
 		string postfixExpression;
 		string::iterator i = infixExpression.begin();
 		vector<char> stack;
 
 
-		for (; i != infixExpression.end(); ++i)
+	for (; i != infixExpression.end(); ++i)
+	{
+		// 연산자 아닐경우 패스
+		if (simbols.find(*i) == string::npos || (*i == '-' && simbols.find(*i + 1) == string::npos))
 		{
-			// 연산자 아닐경우 패스
-			if (simbols.find(*i) == string::npos || (*i == '-' && simbols.find(*i + 1) == string::npos))
-			{
-				postfixExpression += *i;
-				continue;
-			}
+			postfixExpression += *i;
+			continue;
+		}
 
-			// 연산자 처리
-			postfixExpression += " ";
-			switch (*i)
+		// 연산자 처리
+		postfixExpression += " ";
+		switch (*i)
+		{
+		case '(': stack.push_back('('); break;
+		case ')':
+			while (stack.back() != '(')
 			{
-			case '(': stack.push_back('('); break;
-			case ')':
-				while (stack.back() != '(')
-				{
-					postfixExpression += stack.back();
-					postfixExpression += " ";
-					stack.pop_back();
-				}
+				postfixExpression += stack.back();
+				postfixExpression += " ";
 				stack.pop_back();
-				break;
-			case '+':
-			case '-':
-				compare(i, postfixExpression, stack); break;
-			case '*':
-			case '/':
-				compare(i, postfixExpression, stack); break;
-			case '^':
-			case 'l':
-			case 's':
-			case 'c':
-			case 't':
-				compare(i, postfixExpression, stack); break;
-			case ' ':
-				break;
-			default:
-				//error//
-				break;
 			}
-			postfixExpression += " ";
-		}
-
-		// 남은 연산자 처리
-		size_t stackSize = stack.size();
-		for (size_t i = 0; i < stackSize; ++i)
-		{
-			postfixExpression += " ";
-			postfixExpression += stack.back();
 			stack.pop_back();
+			break;
+		case '+':
+		case '-':
+			compare(i, postfixExpression, stack); break;
+		case '*':
+		case '/':
+			compare(i, postfixExpression, stack); break;
+		case '^':
+		case 'l':
+		case 's':
+		case 'c':
+		case 't':
+			compare(i, postfixExpression, stack); break;
+		case ' ':
+			break;
+		default:
+			//error//
+			break;
 		}
+		postfixExpression += " ";
+	}
 
-
-
-		/*}
-	taketime = clock() - start;
-	printf("나머지 걸린시간 %f\n", taketime);*/
-	
-
+	// 남은 연산자 처리
+	size_t stackSize = stack.size();
+	for (size_t i = 0; i < stackSize; ++i)
+	{
+		postfixExpression += " ";
+		postfixExpression += stack.back();
+		stack.pop_back();
+	}
 
 	return postfixExpression;
 }
