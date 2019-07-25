@@ -1,8 +1,4 @@
 #include "Calculator.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
-#include <time.h>
-#include <sstream>
 
 Calculator::Calculator()
 {
@@ -32,7 +28,7 @@ Calculator::~Calculator()
 }
 
 // 중위 표기법을 후위 표기법으로 변환
-string Calculator::GetPostFix(string infixExpression)
+string Calculator::GetPostFix(string& infixExpression)
 {
 	/*double start = clock();
 	for (int i = 0; i < 1000; i++)
@@ -117,7 +113,7 @@ string Calculator::GetPostFix(string infixExpression)
 }
 
 // 후위 표기법 계산
-double Calculator::Calculate(const string postfixExpression)
+double Calculator::Calculate(string& postfixExpression)
 {
 	vector<double> stack;
 	string str = "dumy";

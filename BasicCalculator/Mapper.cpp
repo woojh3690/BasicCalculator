@@ -1,15 +1,15 @@
 #include "Mapper.h"
-#include <time.h>
 
-Mapper::Mapper()
+Mapper::Mapper(string formula)
 {
+	this->formula = formula;
 }
 
 Mapper::~Mapper()
 {
 }
 
-string Mapper::Mapping(string formula, string params[][2])
+string Mapper::Mapping(string params[][2])
 {
 	int end = sizeof(params) / sizeof(params[0]);
 	for (int i = 0; i < end; i++)

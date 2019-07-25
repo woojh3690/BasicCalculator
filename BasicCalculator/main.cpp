@@ -48,8 +48,8 @@ void my()
 	/*double start = clock();
 	for (int i = 0; i < 1; i++)
 	{*/
-		Mapper mapper = Mapper();
-		infixExpression = mapper.Mapping(formula, params);
+		Mapper mapper = Mapper(formula);
+		infixExpression = mapper.Mapping(params);
 	/*}
 	double taketime = clock() - start;
 	printf("mapper 걸린시간 %f\n", taketime);*/

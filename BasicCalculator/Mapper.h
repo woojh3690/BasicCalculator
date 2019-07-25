@@ -1,5 +1,4 @@
 #include <string>
-#include <map>
 #include "Calculator.h"
 using namespace std;
 
@@ -8,10 +7,11 @@ class Mapper
 private:
 	Calculator cal = Calculator();
 	int end;
+	string formula;
 public:
-	Mapper();
+	Mapper(string formula);
 	~Mapper();
 
 public:
-	string Mapping(string formula, string params[][2]);
+	string Mapping(string params[][2]);
 };
