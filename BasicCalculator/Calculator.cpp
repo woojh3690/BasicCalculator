@@ -6,49 +6,29 @@ Calculator::~Calculator()
 
 double Calculator::start(string params[][2])
 {
-	/*string temp;
-	double start = clock();
-	for (int i = 0; i < 1000; i++)
-	Mapping(params);
-	double taketime = clock() - start;
-	printf("Mapping 걸린시간 %lf\n", taketime);
+	string temp = formula;
+	for (int i = 0; i < size; i++)
+	{
+		string number = params[i][1];
+		number.erase(number.find_last_not_of('0') + 1, string::npos); //소수점 뒤 0 제거
+		ReplaceAll(temp, params[i][0], number);
+	}
 
-	temp  = "x1*a1+x2*a2+x3*a3+x4*a4";
-
-	 start = clock();
-	for (int i = 0; i < 1000; i++)
-	GetPostFix(temp);
-	 taketime = clock() - start;
-	printf("GetPostFix 걸린시간 %lf\n", taketime);
-
-	temp = "x1  a1 *  x2  a2 * +  x3  a3 * +  x4  a4 * +";
-	 start = clock();
-	for (int i = 0; i < 1000; i++)
-		Calculate(temp);
-	 taketime = clock() - start;
-	printf("Calculate 걸린시간 %lf\n", taketime);
-
-	return 0.231;*/
-
-	string temp = Mapping(params);
-	temp = GetPostFix(temp);
-	return Calculate(temp);
-
+	return Calculate(GetPostFix(temp));
 }
 
 // 중위 표기법을 후위 표기법으로 변환
 string Calculator::GetPostFix(string& infixExpression)
 {
-	preprocessing(infixExpression); //전처리
 	string postfixExpression;
-	vector<char> stack;
+	stack.clear();
 	string::iterator i = infixExpression.begin();
 	string::iterator end = infixExpression.end();
 
 	for (; i != end; ++i)
 	{
 		// 연산자 아닐경우 패스
-		if (simbols.find(*i) == string::npos || (*i == '-' && simbols.find(*i + 1) == string::npos))
+		if (simbols.find(*i) == string::npos && simbols_single.find(*i) == string::npos || (*i == '-' && simbols.find(*i + 1) == string::npos))
 		{
 			postfixExpression += *i;
 			continue;
@@ -83,7 +63,8 @@ string Calculator::GetPostFix(string& infixExpression)
 		default:
 			//error//
 			break;
-		}
+		};
+
 		postfixExpression += " ";
 	}
 
@@ -100,7 +81,7 @@ string Calculator::GetPostFix(string& infixExpression)
 }
 
 // 후위 표기법 계산
-double Calculator::Calculate(string& postfixExpression)
+double Calculator::Calculate(string postfixExpression)
 {
 	vector<double> stack;
 	string str = "dumy";
@@ -151,7 +132,7 @@ double Calculator::Calculate(string& postfixExpression)
 			case '/':
 				stack.push_back(d1 / d2); break;
 			case '^':
-				stack.push_back(powf(d1, d2)); break;
+				stack.push_back(pow(d1, d2)); break;
 			}
 		}
 	}
@@ -160,7 +141,7 @@ double Calculator::Calculate(string& postfixExpression)
 }
 
 // 전처리
-void Calculator::preprocessing(string& infixExpression)
+string Calculator::preprocessing(string infixExpression)
 {
 	//커스텀 함수를 문자 하나로 변경
 	for (int i = 0; i < FUNC_SIZE; i++) {
@@ -196,6 +177,8 @@ void Calculator::preprocessing(string& infixExpression)
 			i++;
 		}
 	}
+
+	return infixExpression;
 }
 
 void Calculator::compare(string::iterator i, string& postfixExpression, vector<char>& stack)
@@ -217,16 +200,7 @@ void Calculator::ReplaceAll(std::string& str, const std::string& from, const std
 	}
 }
 
-double Calculator::getRadian(int _num)
+double Calculator::getRadian(double _num)
 {
 	return _num * (M_PI / 180);
-}
-
-string Calculator::Mapping(string params[][2])
-{
-	for (int i = 0; i < size; i++)
-	{
-		ReplaceAll(formula, params[i][0], params[i][1]);
-	}
-	return formula;
 }
